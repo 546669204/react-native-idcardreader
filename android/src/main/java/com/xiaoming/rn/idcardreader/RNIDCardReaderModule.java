@@ -190,7 +190,7 @@ public class RNIDCardReaderModule extends ReactContextBaseJavaModule  implements
                     if (idCardInfo.getPhotolength() > 0) {
                       byte[] buf = new byte[WLTService.imgLength];
                       if (1 == WLTService.wlt2Bmp(idCardInfo.getPhoto(), buf)) {
-                        params.putString("img", Base64.encodeToString(buf,Base64.DEFAULT));
+                        params.putString("img", IDPhotoHelper.bitmapToBase64(IDPhotoHelper.Bgr2Bitmap(buf)));
                       }
                     }
                   }
@@ -208,7 +208,7 @@ public class RNIDCardReaderModule extends ReactContextBaseJavaModule  implements
                     if (idprpCardInfo.getPhotolength() > 0) {
                       byte[] buf = new byte[WLTService.imgLength];
                       if (1 == WLTService.wlt2Bmp(idprpCardInfo.getPhoto(), buf)) {
-                        params.putString("img", Base64.encodeToString(buf,Base64.DEFAULT));
+                        params.putString("img", IDPhotoHelper.bitmapToBase64(IDPhotoHelper.Bgr2Bitmap(buf)));
                       }
                     }
                   }
@@ -229,7 +229,7 @@ public class RNIDCardReaderModule extends ReactContextBaseJavaModule  implements
                     if (idCardInfo.getPhotolength() > 0) {
                       byte[] buf = new byte[WLTService.imgLength];
                       if (1 == WLTService.wlt2Bmp(idCardInfo.getPhoto(), buf)) {
-                        params.putString("img", Base64.encodeToString(buf,Base64.DEFAULT));
+                        params.putString("img", IDPhotoHelper.bitmapToBase64(IDPhotoHelper.Bgr2Bitmap(buf)));
                       }
                     }
                   }
