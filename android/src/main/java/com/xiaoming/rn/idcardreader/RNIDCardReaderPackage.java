@@ -14,7 +14,7 @@ import com.facebook.react.bridge.JavaScriptModule;
 public class RNIDCardReaderPackage implements ReactPackage {
     @Override
     public List<NativeModule> createNativeModules(ReactApplicationContext reactContext) {
-      return Arrays.<NativeModule>asList(new RNIDCardReaderModule(reactContext));
+      return Arrays.<NativeModule>asList(new RNIDCardReaderModule(reactContext),new RNIDCardReader3xxModule(reactContext));
     }
 
     // Deprecated from RN 0.47
