@@ -35,7 +35,7 @@ public class RNIDCardReader3xxModule extends ReactContextBaseJavaModule implemen
     private final ReactApplicationContext reactContext;
     private IDCardReader idCardReader = null;
 
-    private boolean bStoped = false;
+    private boolean bStoped = true;
 
     private ArrayList list = new ArrayList();
     private BluetoothAdapter mBluetoothAdapter;
@@ -116,7 +116,7 @@ public class RNIDCardReader3xxModule extends ReactContextBaseJavaModule implemen
 
     @ReactMethod
     public void connect(String mac, Promise promise) {
-
+        stop();
         if (mBluetoothAdapter.isDiscovering()) {
             mBluetoothAdapter.cancelDiscovery();
         }
@@ -126,8 +126,10 @@ public class RNIDCardReader3xxModule extends ReactContextBaseJavaModule implemen
 
         BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(mac);
         try {
-            if(mBluetoothSocket!=null && mBluetoothSocket.isConnected()){
+            if(mBluetoothSocket!=null ){
                 mBluetoothSocket.close();
+                mBluetoothSocket = null;
+                Thread.sleep(500);
             }
             idCardReader = new IDCardReader();
 
@@ -140,6 +142,7 @@ public class RNIDCardReader3xxModule extends ReactContextBaseJavaModule implemen
         } catch (Exception e) {
             // TODO: handle exception
             Log.e("xm 3xxx",e.toString());
+            e.printStackTrace();
             idCardReader = null;
             try {
                 mBluetoothSocket.close();
@@ -150,6 +153,7 @@ public class RNIDCardReader3xxModule extends ReactContextBaseJavaModule implemen
 
     @ReactMethod
     public void start() {
+        if(bStoped == false)return;
         bStoped = false;
         new Thread(new Runnable() {
             public void run() {
