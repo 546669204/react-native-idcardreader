@@ -160,43 +160,48 @@ public class RNIDCardReader3xxModule extends ReactContextBaseJavaModule implemen
                 while (!bStoped) {
                     try {
                         Thread.sleep(500);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    Log.d("xm 3xxx","starting");
-                    if (bStoped||!idCardReader.sdtFindCard()) {
-                        continue;
-                    } else {
-                        if (!idCardReader.sdtSelectCard()) {
+                        Log.d("xm 3xxx","starting");
+                        if (bStoped||!idCardReader.sdtFindCard()) {
+                            continue;
+                        } else {
+                            if (!idCardReader.sdtSelectCard()) {
+                                continue;
+                            }
+                        }
+                        final IDCardInfo idCardInfo = new IDCardInfo();
+                        if (!idCardReader.sdtReadCard(1, idCardInfo)) {
                             continue;
                         }
-                    }
-                    final IDCardInfo idCardInfo = new IDCardInfo();
-                    if (!idCardReader.sdtReadCard(1, idCardInfo)) {
-                        continue;
-                    }
 
-                    WritableMap params = Arguments.createMap();
-                    params.putDouble("timer", 0);
-                    params.putInt("retType", 0);
+                        WritableMap params = Arguments.createMap();
+                        params.putDouble("timer", 0);
+                        params.putInt("retType", 0);
 
-                    params.putString("name", idCardInfo.getName());//姓名
-                    params.putString("nation", idCardInfo.getNation());//民族,港澳台不支持该项
-                    params.putString("born", idCardInfo.getBirth());//姓名
-                    params.putString("addr", idCardInfo.getAddress());//姓名
-                    params.putString("id", idCardInfo.getId());//姓名
-                    params.putString("effext", idCardInfo.getValidityTime());//姓名
-                    params.putString("issueAt", idCardInfo.getDepart());//姓名
-                    params.putString("passNum", idCardInfo.getPassNum());//姓名
-                    params.putString("name", idCardInfo.getName());//姓名
-                    params.putInt("visaTimes", idCardInfo.getVisaTimes());//姓名
-                    if (idCardInfo.getPhotolength() > 0) {
-                        byte[] buf = new byte[WLTService.imgLength];
-                        if (1 == WLTService.wlt2Bmp(idCardInfo.getPhoto(), buf)) {
-                            params.putString("img", IDPhotoHelper.bitmapToBase64(IDPhotoHelper.Bgr2Bitmap(buf)));
+                        params.putString("name", idCardInfo.getName());//姓名
+                        params.putString("nation", idCardInfo.getNation());//民族,港澳台不支持该项
+                        params.putString("born", idCardInfo.getBirth());//姓名
+                        params.putString("addr", idCardInfo.getAddress());//姓名
+                        params.putString("id", idCardInfo.getId());//姓名
+                        params.putString("effext", idCardInfo.getValidityTime());//姓名
+                        params.putString("issueAt", idCardInfo.getDepart());//姓名
+                        params.putString("passNum", idCardInfo.getPassNum());//姓名
+                        params.putString("name", idCardInfo.getName());//姓名
+                        params.putInt("visaTimes", idCardInfo.getVisaTimes());//姓名
+                        if (idCardInfo.getPhotolength() > 0) {
+                            byte[] buf = new byte[WLTService.imgLength];
+                            if (1 == WLTService.wlt2Bmp(idCardInfo.getPhoto(), buf)) {
+                                params.putString("img", IDPhotoHelper.bitmapToBase64(IDPhotoHelper.Bgr2Bitmap(buf)));
+                            }
                         }
+                        sendEvent(reactContext, "callback", params);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                        WritableMap params = Arguments.createMap();
+                        params.putInt("code",-1);
+                        params.putString("msg",e.getMessage());
+                        bStoped = true;
                     }
-                    sendEvent(reactContext, "callback", params);
+
 
                 }
             }
