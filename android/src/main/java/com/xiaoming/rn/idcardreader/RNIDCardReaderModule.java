@@ -7,17 +7,18 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbManager;
-import android.util.Base64;
 import android.util.Log;
 import android.widget.Toast;
+
 import androidx.annotation.Nullable;
+
+import com.facebook.react.bridge.Arguments;
+import com.facebook.react.bridge.LifecycleEventListener;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
-import com.facebook.react.bridge.LifecycleEventListener;
-import com.facebook.react.modules.core.DeviceEventManagerModule;
 import com.facebook.react.bridge.WritableMap;
-import com.facebook.react.bridge.Arguments;
+import com.facebook.react.modules.core.DeviceEventManagerModule;
 import com.zkteco.android.IDReader.IDPhotoHelper;
 import com.zkteco.android.IDReader.WLTService;
 import com.zkteco.android.biometric.core.device.ParameterHelper;
@@ -27,6 +28,7 @@ import com.zkteco.android.biometric.module.idcard.IDCardReaderFactory;
 import com.zkteco.android.biometric.module.idcard.exception.IDCardReaderException;
 import com.zkteco.android.biometric.module.idcard.meta.IDCardInfo;
 import com.zkteco.android.biometric.module.idcard.meta.IDPRPCardInfo;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
@@ -63,7 +65,7 @@ public class RNIDCardReaderModule extends ReactContextBaseJavaModule  implements
           if (intent.getBooleanExtra(UsbManager.EXTRA_PERMISSION_GRANTED, false))
           {
             OpenDevice();
-            Toast.makeText(reactContext, "OpenDevice", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(reactContext, "OpenDevice", Toast.LENGTH_SHORT).show();
           }
           else
           {
@@ -90,7 +92,7 @@ public class RNIDCardReaderModule extends ReactContextBaseJavaModule  implements
   }
   private void RequestDevicePermission()
   {
-    Toast.makeText(reactContext, "RequestDevicePermission", Toast.LENGTH_SHORT).show();
+//    Toast.makeText(reactContext, "RequestDevicePermission", Toast.LENGTH_SHORT).show();
     musbManager = (UsbManager)this.reactContext.getSystemService(Context.USB_SERVICE);
     IntentFilter filter = new IntentFilter();
     filter.addAction(ACTION_USB_PERMISSION);
@@ -99,7 +101,7 @@ public class RNIDCardReaderModule extends ReactContextBaseJavaModule  implements
     Log.d("xm",""+musbManager.getDeviceList().values().size());
     for (UsbDevice device : musbManager.getDeviceList().values())
     {
-      Toast.makeText(reactContext, ""+device.getVendorId()+device.getProductId(), Toast.LENGTH_SHORT).show();
+//      Toast.makeText(reactContext, ""+device.getVendorId()+device.getProductId(), Toast.LENGTH_SHORT).show();
       Log.d("xm",""+device.getVendorId()+device.getProductId());
       if (device.getVendorId() == VID && device.getProductId() == PID)
       {
@@ -190,7 +192,7 @@ public class RNIDCardReaderModule extends ReactContextBaseJavaModule  implements
                     if (idCardInfo.getPhotolength() > 0) {
                       byte[] buf = new byte[WLTService.imgLength];
                       if (1 == WLTService.wlt2Bmp(idCardInfo.getPhoto(), buf)) {
-                        params.putString("img", IDPhotoHelper.bitmapToBase64(IDPhotoHelper.Bgr2Bitmap(buf)));
+                        params.putString("img", Utils.bitmapToBase64(IDPhotoHelper.Bgr2Bitmap(buf)));
                       }
                     }
                   }
@@ -208,7 +210,7 @@ public class RNIDCardReaderModule extends ReactContextBaseJavaModule  implements
                     if (idprpCardInfo.getPhotolength() > 0) {
                       byte[] buf = new byte[WLTService.imgLength];
                       if (1 == WLTService.wlt2Bmp(idprpCardInfo.getPhoto(), buf)) {
-                        params.putString("img", IDPhotoHelper.bitmapToBase64(IDPhotoHelper.Bgr2Bitmap(buf)));
+                        params.putString("img", Utils.bitmapToBase64(IDPhotoHelper.Bgr2Bitmap(buf)));
                       }
                     }
                   }
@@ -229,7 +231,7 @@ public class RNIDCardReaderModule extends ReactContextBaseJavaModule  implements
                     if (idCardInfo.getPhotolength() > 0) {
                       byte[] buf = new byte[WLTService.imgLength];
                       if (1 == WLTService.wlt2Bmp(idCardInfo.getPhoto(), buf)) {
-                        params.putString("img", IDPhotoHelper.bitmapToBase64(IDPhotoHelper.Bgr2Bitmap(buf)));
+                        params.putString("img", Utils.bitmapToBase64(IDPhotoHelper.Bgr2Bitmap(buf)));
                       }
                     }
                   }
