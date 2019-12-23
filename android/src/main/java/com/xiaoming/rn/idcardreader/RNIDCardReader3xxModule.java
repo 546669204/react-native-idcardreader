@@ -190,7 +190,7 @@ public class RNIDCardReader3xxModule extends ReactContextBaseJavaModule implemen
                         if (idCardInfo.getPhotolength() > 0) {
                             byte[] buf = new byte[WLTService.imgLength];
                             if (1 == WLTService.wlt2Bmp(idCardInfo.getPhoto(), buf)) {
-                                params.putString("img", IDPhotoHelper.bitmapToBase64(IDPhotoHelper.Bgr2Bitmap(buf)));
+                                params.putString("img", Utils.bitmapToBase64(IDPhotoHelper.Bgr2Bitmap(buf)));
                             }
                         }
                         sendEvent(reactContext, "callback", params);
