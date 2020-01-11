@@ -56,6 +56,10 @@ public class RNIDCardReader3xxModule extends ReactContextBaseJavaModule implemen
                 }
             } else if (action.equals(BluetoothAdapter.ACTION_DISCOVERY_FINISHED)) {
                 // setProgressBarIndeterminateVisibility(false);
+                WritableMap params = Arguments.createMap();
+                params.putInt("code",0);
+                params.putArray("data",Arguments.fromArray(list));
+                sendEvent(reactContext, "callbackBySearch", params);
 
             }
         }
@@ -95,9 +99,9 @@ public class RNIDCardReader3xxModule extends ReactContextBaseJavaModule implemen
 
     private void init() {
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-        if (!mBluetoothAdapter.isEnabled()) {
-            mBluetoothAdapter.enable();
-        }
+        // if (!mBluetoothAdapter.isEnabled()) {
+        //     mBluetoothAdapter.enable();
+        // }
         IntentFilter mFilter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
         reactContext.registerReceiver(mReceiver, mFilter);
         // 注册搜索完时的receiver
@@ -199,6 +203,7 @@ public class RNIDCardReader3xxModule extends ReactContextBaseJavaModule implemen
                         WritableMap params = Arguments.createMap();
                         params.putInt("code",-1);
                         params.putString("msg",e.getMessage());
+                        sendEvent(reactContext, "callback", params);
                         bStoped = true;
                     }
 
