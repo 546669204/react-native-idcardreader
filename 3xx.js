@@ -4,6 +4,9 @@ import { NativeModules,NativeEventEmitter } from 'react-native';
 const { RNIDCardReader3xx } = NativeModules;
 
 export default {
+	getDevices:function(){
+		return RNIDCardReader3xx.getDevices();
+	},
 	search:function(){
 		RNIDCardReader3xx.search();
 	},

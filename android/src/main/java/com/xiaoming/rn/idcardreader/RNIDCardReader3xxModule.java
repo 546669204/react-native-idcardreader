@@ -7,9 +7,11 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Build;
 import android.util.Log;
 
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.LifecycleEventListener;
@@ -17,7 +19,9 @@ import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
+import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
+import com.facebook.react.common.ArrayUtils;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
 import com.zkteco.android.IDReader.IDPhotoHelper;
 import com.zkteco.android.IDReader.WLTService;
@@ -28,6 +32,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 
 public class RNIDCardReader3xxModule extends ReactContextBaseJavaModule implements LifecycleEventListener {
@@ -107,6 +113,25 @@ public class RNIDCardReader3xxModule extends ReactContextBaseJavaModule implemen
         // 注册搜索完时的receiver
         mFilter = new IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
         reactContext.registerReceiver(mReceiver, mFilter);
+    }
+
+    @ReactMethod
+    public void getDevices(Promise promise) {
+        Set<BluetoothDevice> bondedDevices = mBluetoothAdapter.getBondedDevices();
+        WritableArray array = Arguments.createArray();
+        for (BluetoothDevice bluetoothDevice : bondedDevices)
+        {
+            WritableMap map = Arguments.createMap();
+            map.putString("name",bluetoothDevice.getName());
+            map.putString("mac",bluetoothDevice.getAddress());
+            map.putInt("state",bluetoothDevice.getBondState());
+//            map.putString("uuid",bluetoothDevice.getUuids()[0].toString());
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+                map.putInt("type",bluetoothDevice.getType());
+            }
+            array.pushMap(map);
+        }
+        promise.resolve(array);
     }
 
     @ReactMethod
