@@ -117,6 +117,9 @@ public class RNIDCardReader3xxModule extends ReactContextBaseJavaModule implemen
 
     @ReactMethod
     public void getDevices(Promise promise) {
+        if (!mBluetoothAdapter.isEnabled()) {
+            mBluetoothAdapter.enable();
+        }
         Set<BluetoothDevice> bondedDevices = mBluetoothAdapter.getBondedDevices();
         WritableArray array = Arguments.createArray();
         for (BluetoothDevice bluetoothDevice : bondedDevices)
@@ -136,6 +139,9 @@ public class RNIDCardReader3xxModule extends ReactContextBaseJavaModule implemen
 
     @ReactMethod
     public void search() {
+        if (!mBluetoothAdapter.isEnabled()) {
+            mBluetoothAdapter.enable();
+        }
         list = new ArrayList<>();
         if (mBluetoothAdapter.isDiscovering()) {
             mBluetoothAdapter.cancelDiscovery();
@@ -145,6 +151,9 @@ public class RNIDCardReader3xxModule extends ReactContextBaseJavaModule implemen
 
     @ReactMethod
     public void connect(String mac, Promise promise) {
+        if (!mBluetoothAdapter.isEnabled()) {
+            mBluetoothAdapter.enable();
+        }
         stop();
         if (mBluetoothAdapter.isDiscovering()) {
             mBluetoothAdapter.cancelDiscovery();
